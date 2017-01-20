@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.imagetool.imagechoose.ChooserSetting;
+import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.R;
-import com.imagetool.imagechoose.abslayer.IAlpha;
-import com.imagetool.imagechoose.abslayer.IImageClickListener;
-import com.imagetool.imagechoose.abslayer.IPhotoShoot;
+import com.imagetool.imagechoose.album.adapter.FolderAdapter;
+import com.imagetool.imagechoose.albumBean.ImageFolder;
+import com.imagetool.imagechoose.albumBean.ImageInfo;
+import com.imagetool.imagechoose.callBack.IAlpha;
+import com.imagetool.imagechoose.callBack.IImageClickListener;
+import com.imagetool.imagechoose.callBack.IPhotoCamera;
 import com.imagetool.imagechoose.res.IChooseDrawable;
 
 import java.util.ArrayList;
@@ -21,7 +24,10 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Description:
+ * 类名称：FolderFragment
+ * 创建者：Create by liujc
+ * 创建时间：Create on 2017/1/20 14:59
+ * 描述：图片选择界面
  */
 public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower,IAlpha {
 
@@ -33,7 +39,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
     private Vector<ImageInfo> selectImgs;
     private IImageClickListener listener;
     private IChooseDrawable drawable;
-    private IPhotoShoot photoShoot;
+    private IPhotoCamera photoShoot;
 
     private List<String> initSelect;
 
@@ -50,7 +56,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
 
     private void initView(){
         mGrid= (GridView) rootView.findViewById(R.id.mAlbum);
-        mGrid.setNumColumns(ChooserSetting.NUM_COLUMNS);
+        mGrid.setNumColumns(ImageChooseConstant.NUM_COLUMNS);
         mGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -59,21 +65,21 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
                         photoShoot.takePhoto();
                     }
                 }else{
-                    ImageInfo info=data.get(position);
-                    if(info.state>0){   //点击已经选择过得
-                        boolean a=listener.onCancel(selectImgs,info);
-                        if(!a){
-                            info.state=0;
+                    ImageInfo info = data.get(position);
+                    if(info.positon > 0){   //点击已经选择过得
+                        boolean isCancelSuccess = listener.onCancelSelect(selectImgs,info);
+                        if(!isCancelSuccess){
+                            info.positon=0;
                             selectImgs.removeElement(info);
                             int size=selectImgs.size();
                             for(int i=0;i<size;i++){
-                                selectImgs.get(i).state=i+1;
+                                selectImgs.get(i).positon=i+1;
                             }
                         }
                     }else{
-                        boolean b=listener.onAdd(selectImgs,info);
-                        if(!b){
-                            info.state=selectImgs.size()+1;
+                        boolean isSelectSuccess = listener.onAddSelect(selectImgs,info);
+                        if(!isSelectSuccess){
+                            info.positon=selectImgs.size()+1;
                             selectImgs.add(info);
                         }
                     }
@@ -84,7 +90,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
         mCover=rootView.findViewById(R.id.mCover);
     }
 
-    public void setPhotoShoot(IPhotoShoot photoShoot){
+    public void setPhotoShoot(IPhotoCamera photoShoot){
         this.photoShoot=photoShoot;
     }
 
@@ -93,7 +99,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
     }
 
     private void initData(){
-        adapter=new FolderAdapter(this,data,drawable);
+        adapter = new FolderAdapter(this,data,drawable);
         mGrid.setAdapter(adapter);
         selectImgs=new Vector<>();
         if(initSelect!=null){
@@ -101,7 +107,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
             for (int i=0;i<size;i++){
                 ImageInfo info=new ImageInfo();
                 info.path=initSelect.get(i);
-                info.state=i+1;
+                info.positon=i+1;
                 selectImgs.add(info);
             }
         }
@@ -119,7 +125,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
     public void setFolder(ImageFolder folder) {
         if(data!=null){
             data.clear();
-            if(ChooserSetting.takePhotoType!=ChooserSetting.TP_NONE){
+            if(ImageChooseConstant.takePhotoType != ImageChooseConstant.TP_NONE){
                 data.add(new ImageInfo());
             }
             data.addAll(folder.getDatas());
@@ -127,7 +133,7 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
             for (ImageInfo s:selectImgs){
                 for(int i=0;i<size;i++){
                     ImageInfo info=data.get(i);
-                    if(info.state==0&&info.path!=null&&info.path.equals(s.path)){
+                    if(info.positon==0&&info.path!=null&&info.path.equals(s.path)){
                         data.remove(i);
                         data.add(i,s);
                         break;
@@ -143,8 +149,8 @@ public class FolderFragment extends Fragment implements AlbumEntry.IFolderShower
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(ChooserSetting.chooseDrawable!=null){
-            ChooserSetting.chooseDrawable.clear();
+        if(ImageChooseConstant.chooseDrawable!=null){
+            ImageChooseConstant.chooseDrawable.clear();
         }
     }
 

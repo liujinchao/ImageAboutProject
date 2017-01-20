@@ -1,4 +1,4 @@
-package com.imagetool.imagechoose.abslayer;
+package com.imagetool.imagechoose.callBack;
 
 /**
  * 类名称：IAlpha

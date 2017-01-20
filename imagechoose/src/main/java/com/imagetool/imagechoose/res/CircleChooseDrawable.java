@@ -13,7 +13,7 @@ import android.graphics.Path;
 public class CircleChooseDrawable extends IChooseDrawable {
 
     private boolean isShowNum=true;
-    private int chooseBgColor = 0xFFFF6600;
+    private int chooseBgColor = 0xFF33a6b8;
     private Path path;
 
     public CircleChooseDrawable(){

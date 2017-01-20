@@ -19,9 +19,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-/**
- * Description:
- */
 public class CropHelper implements View.OnTouchListener {
 
     private static final String TAG = "Touch";
@@ -30,7 +27,6 @@ public class CropHelper implements View.OnTouchListener {
     private Matrix savedMatrix = new Matrix();
     private Rect limit;
 
-    // We can be in one of these 3 states
     private final int NONE = 0;
     private final int DRAG = 1;
     private final int ZOOM = 2;

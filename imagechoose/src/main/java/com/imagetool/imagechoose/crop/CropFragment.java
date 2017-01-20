@@ -18,9 +18,6 @@ import com.imagetool.imagechoose.R;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 
-/**
- * Created by wuwang on 2016/11/4
- */
 
 public class CropFragment extends Fragment {
 

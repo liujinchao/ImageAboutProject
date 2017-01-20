@@ -1,4 +1,6 @@
-package com.imagetool.imagechoose.album;
+package com.imagetool.imagechoose.callBack;
+
+import com.imagetool.imagechoose.albumBean.ImageFolder;
 
 /**
  * 类名称：IAlbumClickListener

@@ -4,10 +4,10 @@
     <color name="theme_divider_color">#FFDDDDDD</color>
     <color name="theme_focus">#FFFF8800</color>
 
-    <color name="test">#FF25c2e6</color>
-
     <color name="backIconColor">#FFFFFFFF</color>
 
+    <color name="album_show_name_text_color">#FF000000</color>
+    <color name="choose_num_text_color">#303F9F</color>
     <color name="choose_drawable_color">#303F9F</color>
-    <color name="title_bar_color">#303F9F</color>
+    <color name="title_bar_background_color">#33a6b8</color>
 </resources>

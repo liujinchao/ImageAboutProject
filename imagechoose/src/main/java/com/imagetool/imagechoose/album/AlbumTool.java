@@ -9,7 +9,9 @@ import android.os.Message;
 import android.provider.MediaStore;
 
 
-import com.imagetool.imagechoose.ChooserSetting;
+import com.imagetool.imagechoose.ImageChooseConstant;
+import com.imagetool.imagechoose.albumBean.ImageFolder;
+import com.imagetool.imagechoose.albumBean.ImageInfo;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -24,12 +26,11 @@ import java.util.ArrayList;
 public class AlbumTool {
 
     private Handler handler;
-    //private Semaphore semaphore;
     private Callback callback;
     private Context context;
 
-    private final int TYPE_FOLDER=1;
-    private final int TYPE_ALBUM=2;
+    private final int TYPE_FOLDER = 1;
+    private final int TYPE_ALBUM = 2;
 
     public AlbumTool(Context context){
         this.context=context;
@@ -124,7 +125,7 @@ public class AlbumTool {
     //获取《最新图片》集
     private ImageFolder getNewestPhotos(Context context) {
         ImageFolder newestFolder=new ImageFolder();
-        newestFolder.setName(ChooserSetting.newestAlbumName);
+        newestFolder.setName(ImageChooseConstant.newestAlbumName);
         ArrayList<ImageInfo> imageBeans = new ArrayList<>();
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -138,8 +139,8 @@ public class AlbumTool {
                         + MediaStore.Images.Media.MIME_TYPE + "=?",
                 new String[]{"image/jpeg", "image/png", "image/jpg"},
                 MediaStore.Images.Media.DATE_MODIFIED + " desc"
-                        + (ChooserSetting.newestAlbumSize < 0 ? ""
-                        : (" limit " + ChooserSetting.newestAlbumSize)));
+                        + (ImageChooseConstant.newestAlbumSize < 0 ? ""
+                        : (" limit " + ImageChooseConstant.newestAlbumSize)));
         if (cursor != null){
             while (cursor.moveToNext()) {
                 ImageInfo info=new ImageInfo();
@@ -206,12 +207,9 @@ public class AlbumTool {
     }
 
     public interface Callback{
-
         //文件夹查找完毕
         void onFolderFinish(ImageFolder folder);
         //成功搜索出所有的图片集
         void onAlbumFinish(ArrayList<ImageFolder> albums);
-
     }
-
 }

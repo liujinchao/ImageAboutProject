@@ -1,4 +1,4 @@
-package com.imagetool.imagechoose.album;
+package com.imagetool.imagechoose.album.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,11 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.imagetool.imagechoose.ChooserSetting;
+import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.R;
+import com.imagetool.imagechoose.albumBean.ImageFolder;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -47,37 +47,32 @@ public class AlbumAdapter extends BaseAdapter {
         FolderHolder holder;
         if(convertView==null){
             convertView= LayoutInflater.from(context).inflate(R.layout.image_chooser_item_album,parent,false);
-            holder=new FolderHolder(convertView);
+            holder=new FolderHolder();
+            holder.mImage = (ImageView) convertView.findViewById(R.id.mImage);
+            holder.mInfo = (TextView) convertView.findViewById(R.id.mInfo);
+            convertView.setTag(holder);
         }else{
             holder= (FolderHolder) convertView.getTag();
         }
-        holder.setData(data.get(position));
+       setData(data.get(position),holder);
         return convertView;
     }
 
-    private class FolderHolder{
+    void setData(ImageFolder folder, FolderHolder holder){
+        //图片加载
+        DrawableRequestBuilder r= Glide.with(context).load(folder.getFirstImagePath())
+                .error(ImageChooseConstant.errorResId)
+                .placeholder(ImageChooseConstant.placeResId);
+        if(ImageChooseConstant.loadAnimateResId <= 0){
+            r.dontAnimate();
+        }else{
+            r.animate(ImageChooseConstant.loadAnimateResId);
+        }
+        r.into(holder.mImage);
+        holder.mInfo.setText(String.format(Locale.CHINA,"%1$s（%2$d）",folder.getName(),folder.getCount()));
+    }
+    private static class FolderHolder{
         ImageView mImage;
         TextView mInfo;
-        FolderHolder(View view){
-            mImage= (ImageView) view.findViewById(R.id.mImage);
-            mInfo= (TextView) view.findViewById(R.id.mInfo);
-            view.setTag(this);
-        }
-
-        void setData(ImageFolder folder){
-            //图片加载
-            DrawableRequestBuilder r= Glide.with(context).load(folder.getFirstImagePath())
-                    .error(ChooserSetting.errorResId)
-                    .placeholder(ChooserSetting.placeResId);
-            if(ChooserSetting.loadAnimateResId <= 0){
-                r.dontAnimate();
-            }else{
-                r.animate(ChooserSetting.loadAnimateResId);
-            }
-            r.into(mImage);
-            mInfo.setText(String.format(Locale.CHINA,"%1$s（%2$d）",folder.getName(),folder.getCount()));
-        }
-
     }
-
 }

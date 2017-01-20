@@ -1,4 +1,4 @@
-package com.imagetool.imagechoose.album;
+package com.imagetool.imagechoose.albumBean;
 
 import java.util.ArrayList;
 

@@ -20,5 +20,5 @@
         android:ellipsize="middle"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:textColor="#FF000000" />
+        android:textColor="@color/album_show_name_text_color" />
 </RelativeLayout>

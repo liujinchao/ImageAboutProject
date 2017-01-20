@@ -11,9 +11,12 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 
-import com.imagetool.imagechoose.ChooserSetting;
+import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.R;
-import com.imagetool.imagechoose.abslayer.IAlpha;
+import com.imagetool.imagechoose.album.adapter.AlbumAdapter;
+import com.imagetool.imagechoose.albumBean.ImageFolder;
+import com.imagetool.imagechoose.callBack.IAlbumClickListener;
+import com.imagetool.imagechoose.callBack.IAlpha;
 
 import java.util.ArrayList;
 
@@ -98,7 +101,7 @@ public class AlbumPopup implements AlbumEntry.IAlbumShower{
     @Override
     public void show() {
         alpha.show();
-        mList.getLayoutParams().height= ChooserSetting.albumPopupHeight;
+        mList.getLayoutParams().height= ImageChooseConstant.albumPopupHeight;
         mList.setLayoutParams(mList.getLayoutParams());
         window.showAsDropDown(anchor);
     }

@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
 
-import com.imagetool.imagechoose.IcFinal;
+import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.crop.CropPath;
 import com.imagetool.utils.LogUtil;
 
@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mGrid= (GridView) findViewById(R.id.mGrid);
         mGrid.setAdapter(adapter=new ShowAdapter());
+        initData();
+    }
+
+    private void initData() {
     }
 
     @Override
@@ -35,35 +39,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         flag=false;
-        Intent intent=new Intent(IcFinal.ACTION_ALBUM);
+        Intent intent=new Intent(ImageChooseConstant.ACTION_ALBUM);
         switch (item.getItemId()){
             case R.id.mOne:
-                intent.putExtra(IcFinal.INTENT_MAX_IMG,1);
+                intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,1);
                 break;
             case R.id.mNine:
-                intent.putExtra(IcFinal.INTENT_MAX_IMG,9);
+                intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,9);
                 if(flag){
-                    intent.putStringArrayListExtra(IcFinal.INTENT_EXIST_DATA,adapter.data);
+                    intent.putStringArrayListExtra(ImageChooseConstant.INTENT_EXIST_DATA,adapter.data);
                 }
                 flag=true;
                 break;
             case R.id.mCrop:
-                intent.putExtra(IcFinal.INTENT_IS_CROP,true);
-                intent.putExtra(IcFinal.INTENT_CROP_SHAPE, CropPath.SHAPE_CIRCLE);
-                intent.putExtra(IcFinal.INTENT_CROP_WIDTH,500);
-                intent.putExtra(IcFinal.INTENT_CROP_HEIGHT,500);
+                intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_SHAPE, CropPath.SHAPE_CIRCLE);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500);
                 break;
             case R.id.mCrop2:
-                intent.putExtra(IcFinal.INTENT_IS_CROP,true);
-                intent.putExtra(IcFinal.INTENT_CROP_SHAPE, CropPath.SHAPE_RECT);
-                intent.putExtra(IcFinal.INTENT_CROP_WIDTH,500);
-                intent.putExtra(IcFinal.INTENT_CROP_HEIGHT,500);
+                intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_SHAPE, CropPath.SHAPE_RECT);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500);
                 break;
             case R.id.mCrop3:
                 LogUtil.d(ExampleCropPath.class.getName());
-                intent.putExtra(IcFinal.INTENT_IS_CROP,true);
-                intent.putExtra(IcFinal.INTENT_CROP_COVER,ExampleCropPath.class.getName());
-                intent.putExtra(IcFinal.INTENT_CROP_PARAM,1);
+                intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_COVER,ExampleCropPath.class.getName());
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_PARAM,1);
                 break;
         }
         startActivityForResult(intent,1);
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             adapter.data.clear();
-            adapter.data.addAll(data.getStringArrayListExtra(IcFinal.RESULT_DATA_IMG));
+            adapter.data.addAll(data.getStringArrayListExtra(ImageChooseConstant.RESULT_DATA_IMG));
             adapter.notifyDataSetChanged();
         }
     }

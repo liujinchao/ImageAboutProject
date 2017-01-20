@@ -9,7 +9,7 @@
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:supportsRtl="true" >
-        <activity android:name=".EntryActivity"
+        <activity android:name=".ChoosePictureEntryActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.imagetool.album" />

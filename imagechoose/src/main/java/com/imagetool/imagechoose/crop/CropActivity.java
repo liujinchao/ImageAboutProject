@@ -8,8 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.imagetool.imagechoose.ChooserSetting;
-import com.imagetool.imagechoose.IcFinal;
+import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.R;
 
 import java.io.IOException;
@@ -37,15 +36,15 @@ public class CropActivity extends FragmentActivity {
 
     public void initByIntent(){
         Intent intent=getIntent();
-        String data=intent.getStringExtra(IcFinal.INTENT_CROP_DATA);
-        shape=intent.getIntExtra(IcFinal.INTENT_CROP_SHAPE,0);
+        String data=intent.getStringExtra(ImageChooseConstant.INTENT_CROP_DATA);
+        shape=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_SHAPE,0);
         if(shape==0){
-            drawableName= intent.getStringExtra(IcFinal.INTENT_CROP_COVER);
-            drawableParam=intent.getIntExtra(IcFinal.INTENT_CROP_PARAM,0);
+            drawableName= intent.getStringExtra(ImageChooseConstant.INTENT_CROP_COVER);
+            drawableParam=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_PARAM,0);
             cropFragment=CropFragment.newFragment(data,drawableName,drawableParam);
         }else if(shape==CropPath.SHAPE_CIRCLE||shape==CropPath.SHAPE_RECT){
-            width=intent.getIntExtra(IcFinal.INTENT_CROP_WIDTH,400);
-            height=intent.getIntExtra(IcFinal.INTENT_CROP_HEIGHT,400);
+            width=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,400);
+            height=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,400);
             cropFragment=CropFragment.newFragment(data,shape,width,height);
         }
         cropFragment.setOnReadyRunnable(new Runnable() {
@@ -61,9 +60,9 @@ public class CropActivity extends FragmentActivity {
 
     public void setTitle(){
         toolbar= (Toolbar) findViewById(R.id.mTitle);
-        toolbar.setBackgroundColor(ChooserSetting.TITLE_COLOR);
+        toolbar.setBackgroundColor(ImageChooseConstant.TITLE_COLOR);
         toolbar.setTitle("裁剪图片");
-        toolbar.setNavigationIcon(R.drawable.image_chooser_back);
+        toolbar.setNavigationIcon(R.drawable.image_choose_back);
         toolbar.setContentInsetStartWithNavigation(0);
         toolbar.inflateMenu(R.menu.menu_crop);
         toolbar.getMenu().getItem(0).setEnabled(false);
@@ -81,7 +80,7 @@ public class CropActivity extends FragmentActivity {
                     try {
                         cropFragment.crop(file);
                         Intent intent=new Intent();
-                        intent.putExtra(IcFinal.RESULT_DATA_IMG,file);
+                        intent.putExtra(ImageChooseConstant.RESULT_DATA_IMG,file);
                         setResult(RESULT_OK,intent);
                         finish();
                     } catch (IOException e) {
