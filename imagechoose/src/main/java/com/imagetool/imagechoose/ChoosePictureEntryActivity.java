@@ -173,9 +173,14 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
             doSystemDefaultCamera();
         }else {
             LogUtil.d("自定义相机");
+            doCustomCamera();
         }
     }
 
+    private void doCustomCamera(){
+        Intent intent = new Intent(ChoosePictureEntryActivity.this,CameraActivity.class);
+        startActivity(intent);
+    }
     private void doSystemDefaultCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //TODO 传入保存路径直接保存
