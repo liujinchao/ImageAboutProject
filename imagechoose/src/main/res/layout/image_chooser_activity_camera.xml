@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tb="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <RelativeLayout
+        android:id="@+id/take_photo_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/title_bar_background_color"
@@ -32,23 +32,24 @@
             android:gravity="center_vertical"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <SurfaceView
-            android:id="@+id/camera_surface"
+        <com.imagetool.imagechoose.camera.CameraSurfaceView
+            android:id="@+id/cameraSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        <TextView
-            android:id="@+id/camera_cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="取消"
-            android:layout_margin="20dp"
-            android:layout_alignParentBottom="true"/>
+
+        <com.imagetool.imagechoose.camera.RectOnCamera
+            android:id="@+id/rectOnCamera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            />
+
         <ImageView
-            android:id="@+id/camera_shutter"
+            android:id="@+id/camera_take_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -58,5 +59,4 @@
             android:layout_margin="20dp"
             />
     </RelativeLayout>
-
 </LinearLayout>

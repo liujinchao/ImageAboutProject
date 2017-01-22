@@ -2,8 +2,10 @@ package com.imagetool.imagechoose.album;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -13,7 +15,9 @@ import com.imagetool.imagechoose.albumBean.ImageInfo;
 import com.imagetool.imagechoose.callBack.IAlbumClickListener;
 import com.imagetool.imagechoose.callBack.IImageClickListener;
 import com.imagetool.imagechoose.res.IChooseDrawable;
+import com.imagetool.utils.ImageChooseUtil;
 import com.imagetool.utils.LogUtil;
+import com.yalantis.ucrop.UCrop;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,18 +107,24 @@ public class AlbumEntry extends AbsAlbumEntry implements AlbumTool.Callback,IAlb
     }
 
     public void crop(String path){
-        int shape = actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_SHAPE,0);
+        int shape = actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_TYPE,0);
         Intent intent=new Intent(ImageChooseConstant.ACTION_CROP);
         intent.putExtra(ImageChooseConstant.INTENT_CROP_DATA,path);
-        intent.putExtra(ImageChooseConstant.INTENT_CROP_SHAPE,shape);
-        if(shape==0){
+        intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE,shape);
+        if(shape == 0){
+            String desUrl = ImageChooseUtil.startUCrop(activity,path,1000,
+                    actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500),
+                    actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500));
+            Log.d("TAG","desUrl:"+desUrl);
+        }else if (shape == ImageChooseConstant.TP_CROPE_CUSTOM) {
             intent.putExtra(ImageChooseConstant.INTENT_CROP_COVER,actIntent.getStringExtra(ImageChooseConstant.INTENT_CROP_COVER));
             intent.putExtra(ImageChooseConstant.INTENT_CROP_PARAM,actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_PARAM,0));
-        }else{
-            intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500));
-            intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500));
+            activity.startActivityForResult(intent,REQ_CROP);
+        }else {
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500));
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500));
+                activity.startActivityForResult(intent,REQ_CROP);
         }
-        activity.startActivityForResult(intent,REQ_CROP);
     }
 
     @Override
@@ -156,6 +166,12 @@ public class AlbumEntry extends AbsAlbumEntry implements AlbumTool.Callback,IAlb
         if(resultCode== Activity.RESULT_OK){
             if(requestCode==REQ_CROP){
                 chooseFinish(data.getStringExtra(ImageChooseConstant.RESULT_DATA_IMG));
+            }else if (requestCode == 1000) {
+                final Uri resultUri = UCrop.getOutput(data);
+                Log.d("TAG",resultUri.getPath());
+                chooseFinish(resultUri.getPath());
+            } else if (resultCode == UCrop.RESULT_ERROR) {
+                final Throwable cropError = UCrop.getError(data);
             }
         }
     }

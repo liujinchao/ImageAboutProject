@@ -12,6 +12,8 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
+import com.imagetool.imagechoose.ImageChooseConstant;
+
 
 public class CropCoverDrawable extends ACropCoverDrawable {
 
@@ -61,9 +63,9 @@ public class CropCoverDrawable extends ACropCoverDrawable {
         Path path=new Path();
         path.addRect(0,0,cWidth,cHeight, Path.Direction.CW);
         cropPath=new Path();
-        if(shape==SHAPE_RECT){
+        if(shape == ImageChooseConstant.TP_CROPE_RECT){
             cropPath.addRect(rect.left,rect.top,rect.right,rect.bottom, Path.Direction.CW);
-        }else if(shape==SHAPE_CIRCLE){
+        }else if(shape == ImageChooseConstant.TP_CROPE_CIRCLE){
             cropPath.addCircle(rect.centerX(),rect.centerY(),rect.width()/2, Path.Direction.CW);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

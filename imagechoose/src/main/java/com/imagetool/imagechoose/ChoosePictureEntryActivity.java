@@ -15,12 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.imagetool.imagechoose.callBack.IPhotoCamera;
 import com.imagetool.imagechoose.album.AlbumEntry;
 import com.imagetool.imagechoose.album.AlbumPopup;
 import com.imagetool.imagechoose.album.FolderFragment;
 import com.imagetool.imagechoose.albumBean.ImageFolder;
 import com.imagetool.imagechoose.albumBean.ImageInfo;
+import com.imagetool.imagechoose.callBack.IPhotoCamera;
+import com.imagetool.imagechoose.camera.CameraActivity;
+import com.imagetool.utils.ImageChooseUtil;
 import com.imagetool.utils.LogUtil;
 
 import java.io.File;
@@ -40,7 +42,8 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
     private MenuItem mSure;
 
     private String tackPicStr;
-    private static final int REQ_TACK_PIC = 0x15;
+    private static final int REQ_TAKE_PIC_FROM_DEFAULT= 0x15; // 从默认系统相机拍摄
+    private static final int REQ_TAKE_PIC_FROM_CUSTOM = 0x16; // 从自定义相机拍摄
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,19 +53,6 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
         Rect outRect = new Rect();
         getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         ImageChooseConstant.albumPopupHeight = (int) (outRect.height()*0.6f);
-//        mAlbumNum= (TextView) findViewById(R.id.mAlbum);
-//        mAlbumNum.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                entry.showAlbumChooser();
-//            }
-//        });
-//        findViewById(R.id.mSure).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                entry.chooseFinish();
-//            }
-//        });
         FolderFragment m = new FolderFragment();
         m.setPhotoShoot(this);
         m.setSelectImgs(getIntent().getStringArrayListExtra(ImageChooseConstant.INTENT_EXIST_DATA));
@@ -99,6 +89,8 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
             toolbar.getMenu().getItem(1).setVisible(false);
         }
 
+        ImageChooseConstant.takePhotoType = getIntent().getIntExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,
+                ImageChooseConstant.TP_SYSTEM);
 //        IntentFilter filter=new IntentFilter(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 //        registerReceiver(receiver,filter);
     }
@@ -143,21 +135,27 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
         LogUtil.d("result-"+resultCode+"/"+requestCode);
         entry.onActivityResult(requestCode, resultCode, data);
         if(resultCode== Activity.RESULT_OK){
-            if(requestCode==REQ_TACK_PIC){
-                //Bitmap bmp= (Bitmap) data.getExtras().get("data");
-                //让拍摄的图片可以在相册目录中出现
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(tackPicStr))));
-                if(entry.isCrop()){
-                    entry.crop(tackPicStr);
-                }else{
-                    Intent intent=new Intent();
-                    ArrayList<String> d=new ArrayList<>();
-                    d.add(tackPicStr);
-                    intent.putExtra(ImageChooseConstant.RESULT_DATA_IMG,d);
-                    setResult(Activity.RESULT_OK,intent);
-                    finish();
-                }
+            if(requestCode == REQ_TAKE_PIC_FROM_DEFAULT){
+                setResultBackToSource(tackPicStr);
+            }else if (requestCode == REQ_TAKE_PIC_FROM_CUSTOM){
+                String imgPath = data.getStringExtra(CameraActivity.IMAGE_PATH);
+                setResultBackToSource(imgPath);
             }
+        }
+    }
+
+    private void setResultBackToSource(String imgPath) {
+        //让拍摄的图片可以在相册目录中出现
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(imgPath))));
+        if(entry.isCrop()){
+            entry.crop(imgPath);
+        }else{
+            Intent intent=new Intent();
+            ArrayList<String> d=new ArrayList<>();
+            d.add(imgPath);
+            intent.putExtra(ImageChooseConstant.RESULT_DATA_IMG,d);
+            setResult(Activity.RESULT_OK,intent);
+            finish();
         }
     }
 
@@ -179,13 +177,14 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
 
     private void doCustomCamera(){
         Intent intent = new Intent(ChoosePictureEntryActivity.this,CameraActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(ChoosePictureEntryActivity.this,CameraActivity.class);
+        startActivityForResult(intent,REQ_TAKE_PIC_FROM_CUSTOM);
     }
     private void doSystemDefaultCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //TODO 传入保存路径直接保存
-        tackPicStr=ImageChooseConstant.tempFolder+"photo/"+ System.currentTimeMillis()+".jpg";
-        File folder = new File(ImageChooseConstant.tempFolder+"photo/");
+        tackPicStr= ImageChooseUtil.getPicturePath()+ System.currentTimeMillis()+".jpg";
+        File folder = new File(ImageChooseUtil.getPicturePath());
         if(!folder.exists()){
             if(!folder.mkdirs()){
                 Toast.makeText(this,"无法拍照", Toast.LENGTH_SHORT).show();
@@ -195,7 +194,7 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
         File file = new File(tackPicStr);
         Uri imageUri = Uri.fromFile(file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent,REQ_TACK_PIC);
+        startActivityForResult(intent,REQ_TAKE_PIC_FROM_DEFAULT);
     }
 
 }

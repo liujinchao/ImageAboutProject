@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.R;
+import com.imagetool.utils.LogUtil;
 
 import java.io.IOException;
 
@@ -32,17 +33,18 @@ public class CropActivity extends FragmentActivity {
         setContentView(R.layout.image_chooser_activity_crop);
         setTitle();
         initByIntent();
+        LogUtil.d("initByIntent");
     }
 
     public void initByIntent(){
         Intent intent=getIntent();
         String data=intent.getStringExtra(ImageChooseConstant.INTENT_CROP_DATA);
-        shape=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_SHAPE,0);
-        if(shape==0){
+        shape=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_TYPE,0);
+        if(shape == ImageChooseConstant.TP_CROPE_CUSTOM){
             drawableName= intent.getStringExtra(ImageChooseConstant.INTENT_CROP_COVER);
             drawableParam=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_PARAM,0);
             cropFragment=CropFragment.newFragment(data,drawableName,drawableParam);
-        }else if(shape==CropPath.SHAPE_CIRCLE||shape==CropPath.SHAPE_RECT){
+        }else if(shape==ImageChooseConstant.TP_CROPE_CIRCLE||shape==ImageChooseConstant.TP_CROPE_RECT){
             width=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,400);
             height=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,400);
             cropFragment=CropFragment.newFragment(data,shape,width,height);

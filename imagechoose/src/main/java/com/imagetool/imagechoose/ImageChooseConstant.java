@@ -1,7 +1,5 @@
 package com.imagetool.imagechoose;
 
-import android.os.Environment;
-
 import com.imagetool.imagechoose.res.CircleChooseDrawable;
 import com.imagetool.imagechoose.res.IChooseDrawable;
 
@@ -17,11 +15,13 @@ public class ImageChooseConstant {
     public static final String INTENT_IS_CROP = "image_is_crop";
     public static final String INTENT_CROP_WIDTH = "image_crop_width";
     public static final String INTENT_CROP_HEIGHT = "image_crop_height";
-    public static final String INTENT_CROP_SHAPE = "image_crop_shape";
+    public static final String INTENT_CROP_TYPE = "image_crop_type";
     public static final String INTENT_CROP_DATA = "image_crop_data";
     public static final String INTENT_CROP_COVER = "image_crop_set";
     public static final String INTENT_CROP_PARAM = "image_crop_param";
     public static final String INTENT_EXIST_DATA = "image_exist_data";
+    public static final String  INTENT_TAKE_PHOTO_TYPE = "take_photo_type";
+
 
     public static final String RESULT_DATA_IMG = "select_img_path";
 
@@ -31,6 +31,11 @@ public class ImageChooseConstant {
     public static final int TP_SYSTEM = 0; //带有系统拍照功能
     public static final int TP_CUSTOM = 1; //带有自定义拍照功能
     public static final int TP_NONE = 2; // 不带拍照功能
+
+    public static final int TP_CROPE_UCROP = 0; // 自定义截图
+    public static final int TP_CROPE_RECT = 1; //方形截图
+    public static final int TP_CROPE_CIRCLE = 2; //圆形截图
+    public static final int  TP_CROPE_CUSTOM = 3; // 第三方截图
 
     /**标题的背景颜色*/
     public static int TITLE_COLOR = 0xFF0dc6e2;
@@ -71,6 +76,6 @@ public class ImageChooseConstant {
     /**照片选择指示器*/
     public static IChooseDrawable chooseDrawable = new CircleChooseDrawable(true,0xFF33a6b8);
 
-    /**临时文件存储位置*/
-    public static String tempFolder = Environment.getExternalStorageDirectory().getAbsolutePath()+"/imageChoose/";
+//    /**临时文件存储位置*/
+//    public static String baseFolder = Environment.getExternalStorageDirectory().getAbsolutePath()+"/imageChoose/";
 }

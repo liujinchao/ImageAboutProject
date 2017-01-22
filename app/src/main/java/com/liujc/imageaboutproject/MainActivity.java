@@ -40,32 +40,41 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         flag=false;
         Intent intent=new Intent(ImageChooseConstant.ACTION_ALBUM);
+//        intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_CUSTOM);
         switch (item.getItemId()){
             case R.id.mOne:
                 intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,1);
+                intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_CUSTOM);
                 break;
             case R.id.mNine:
                 intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,9);
+                intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_SYSTEM);
                 if(flag){
                     intent.putStringArrayListExtra(ImageChooseConstant.INTENT_EXIST_DATA,adapter.data);
                 }
                 flag=true;
                 break;
+            case R.id.mCustomCrop:
+                intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,600);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,600);
+                break;
             case R.id.mCrop:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_SHAPE, CropPath.SHAPE_CIRCLE);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE, ImageChooseConstant.TP_CROPE_CIRCLE);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,600);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,600);
                 break;
             case R.id.mCrop2:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_SHAPE, CropPath.SHAPE_RECT);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE, ImageChooseConstant.TP_CROPE_RECT);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,600);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,600);
                 break;
             case R.id.mCrop3:
                 LogUtil.d(ExampleCropPath.class.getName());
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE, ImageChooseConstant.TP_CROPE_CUSTOM);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_COVER,ExampleCropPath.class.getName());
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_PARAM,1);
                 break;
