@@ -168,7 +168,7 @@ public class ImageChooseUtil {
         UCrop.Options options = new UCrop.Options();
         //设置裁剪图片可操作的手势
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.ROTATE, UCropActivity.ALL);
-        //是否隐藏底部容器，默认显示
+        //是否隐藏底部容器，默认显示,包括旋转缩放功能
         options.setHideBottomControls(true);
         //设置toolbar颜色
         options.setToolbarColor(ActivityCompat.getColor(activity, R.color.title_bar_background_color));

@@ -39,7 +39,7 @@ public class CropActivity extends FragmentActivity {
     public void initByIntent(){
         Intent intent=getIntent();
         String data=intent.getStringExtra(ImageChooseConstant.INTENT_CROP_DATA);
-        shape=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_TYPE,0);
+        shape = intent.getIntExtra(ImageChooseConstant.INTENT_CROP_TYPE,0);
         if(shape == ImageChooseConstant.TP_CROPE_CUSTOM){
             drawableName= intent.getStringExtra(ImageChooseConstant.INTENT_CROP_COVER);
             drawableParam=intent.getIntExtra(ImageChooseConstant.INTENT_CROP_PARAM,0);
