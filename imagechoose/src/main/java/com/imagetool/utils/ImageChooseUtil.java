@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
@@ -130,11 +132,15 @@ public class ImageChooseUtil {
 
     public static String startUCrop(Activity activity, String sourceFilePath,float aspectRatioX, float aspectRatioY,
                                     int requestCode){
-        return startUCrop(activity, sourceFilePath, requestCode, aspectRatioX, aspectRatioY,true,0,0,true);
+        return startUCrop(activity, sourceFilePath, requestCode, aspectRatioX, aspectRatioY,true,0,0,true,false);
     }
     public static String startUCrop(Activity activity, String sourceFilePath,
                                     int requestCode,int width,int height){
-        return startUCrop(activity, sourceFilePath, requestCode, 0, 0,true,width,height,true);
+        return startUCrop(activity, sourceFilePath, requestCode, 0, 0,true,width,height,true,false);
+    }
+    public static String startOvalUCrop(Activity activity, String sourceFilePath,
+                                    int requestCode,int width,int height){
+        return startUCrop(activity, sourceFilePath, requestCode, 1, 1,false,width,height,false,true);
     }
 
     /**
@@ -151,7 +157,7 @@ public class ImageChooseUtil {
      */
     public static String startUCrop(Activity activity, String sourceFilePath,
                                     int requestCode, float aspectRatioX, float aspectRatioY,
-                                    boolean showGrid,int width,int height,boolean cropEnabled) {
+                                    boolean showGrid,int width,int height,boolean cropEnabled,boolean isOval) {
         Uri sourceUri = Uri.fromFile(new File(sourceFilePath));
 //        File outDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File outDir = new File(getPicturePath()+"crop/");
@@ -174,13 +180,17 @@ public class ImageChooseUtil {
         options.setToolbarColor(ActivityCompat.getColor(activity, R.color.title_bar_background_color));
         //设置状态栏颜色
         options.setStatusBarColor(ActivityCompat.getColor(activity, R.color.title_bar_background_color));
+        //是否显示圆形
+        options.setCircleDimmedLayer(isOval);
         //是否能调整裁剪框
         options.setFreeStyleCropEnabled(cropEnabled);
-        //是否显示剪切格
         options.setShowCropGrid(showGrid);
-        options.setShowCropFrame(true);
-        //是否显示
-        options.setCircleDimmedLayer(false);
+        if (isOval){
+            //是否显示剪切格
+            options.setShowCropFrame(false);
+        }else {
+            options.setShowCropFrame(true);
+        }
         //UCrop配置
         uCrop.withOptions(options);
         //设置裁剪图片的宽高比，比如16：9

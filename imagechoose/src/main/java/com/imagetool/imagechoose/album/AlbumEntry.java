@@ -113,8 +113,8 @@ public class AlbumEntry extends AbsAlbumEntry implements AlbumTool.Callback,IAlb
         intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE,shape);
         if(shape == 0){
             String desUrl = ImageChooseUtil.startUCrop(activity,path,1000,
-                    actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,500),
-                    actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,500));
+                    actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_WIDTH,100),
+                    actIntent.getIntExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,100));
             Log.d("TAG","desUrl:"+desUrl);
         }else if (shape == ImageChooseConstant.TP_CROPE_CUSTOM) {
             intent.putExtra(ImageChooseConstant.INTENT_CROP_COVER,actIntent.getStringExtra(ImageChooseConstant.INTENT_CROP_COVER));

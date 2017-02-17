@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.mCustomCrop:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,600);
-                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,600);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,100);
+                intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,100);
                 break;
             case R.id.mCrop:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
