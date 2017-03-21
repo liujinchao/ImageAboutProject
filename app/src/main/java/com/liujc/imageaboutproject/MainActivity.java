@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.mOne:
                 intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,1);
                 intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_CUSTOM);
+                startActivityForResult(intent,1);
                 break;
             case R.id.mNine:
                 intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,9);
@@ -53,23 +54,27 @@ public class MainActivity extends AppCompatActivity {
                     intent.putStringArrayListExtra(ImageChooseConstant.INTENT_EXIST_DATA,adapter.data);
                 }
                 flag=true;
+                startActivityForResult(intent,1);
                 break;
             case R.id.mCustomCrop:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,100);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,100);
+                startActivityForResult(intent,1);
                 break;
             case R.id.mCrop:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE, ImageChooseConstant.TP_CROPE_CIRCLE);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,600);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,600);
+                startActivityForResult(intent,1);
                 break;
             case R.id.mCrop2:
                 intent.putExtra(ImageChooseConstant.INTENT_IS_CROP,true);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE, ImageChooseConstant.TP_CROPE_RECT);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_WIDTH,600);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_HEIGHT,600);
+                startActivityForResult(intent,1);
                 break;
             case R.id.mCrop3:
                 LogUtil.d(ExampleCropPath.class.getName());
@@ -77,9 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_TYPE, ImageChooseConstant.TP_CROPE_CUSTOM);
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_COVER,ExampleCropPath.class.getName());
                 intent.putExtra(ImageChooseConstant.INTENT_CROP_PARAM,1);
+                startActivityForResult(intent,1);
                 break;
+            case R.id.mNineGridImageView:
+                Intent intent2=new Intent(MainActivity.this,NineGridImageViewActivity.class);
+                startActivity(intent2);
         }
-        startActivityForResult(intent,1);
         return super.onOptionsItemSelected(item);
     }
 

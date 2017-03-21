@@ -12,4 +12,6 @@
         android:id="@+id/mCrop3" />
     <item android:title="最多选九张"
         android:id="@+id/mNine"/>
+    <item android:title="九宫格头像"
+        android:id="@+id/mNineGridImageView"/>
 </menu>
