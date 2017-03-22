@@ -5,11 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.GridView;
 
 import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.crop.CropPath;
 import com.imagetool.utils.LogUtil;
+import com.liujc.largerimagescaleview.ImageSource;
+import com.liujc.largerimagescaleview.LargerImageScaleView;
+import com.liujc.largerimagescaleview.activity.BasicFeaturesActivity;
+import com.liujc.largerimagescaleview.activity.viewpager.ViewPagerActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private GridView mGrid;
     private ShowAdapter adapter;
     private boolean flag;       //多选flag
+    LargerImageScaleView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        imageView = (LargerImageScaleView)findViewById(R.id.imageView);
+//        imageView.setImage(ImageSource.asset("squirrel.jpg"));
     }
 
     @Override
@@ -87,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.mNineGridImageView:
                 Intent intent2=new Intent(MainActivity.this,NineGridImageViewActivity.class);
                 startActivity(intent2);
+                break;
+            case R.id.larger_image_view:
+                Intent intent3=new Intent(MainActivity.this,ViewPagerActivity.class);
+                startActivity(intent3);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -95,9 +108,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
+            if (data.getStringArrayListExtra(ImageChooseConstant.RESULT_DATA_IMG) != null
+                    && data.getStringArrayListExtra(ImageChooseConstant.RESULT_DATA_IMG).size() == 1){
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImage(ImageSource.uri(data.getStringArrayListExtra(ImageChooseConstant.RESULT_DATA_IMG).get(0).toString()));
+                return;
+            }
             adapter.data.clear();
             adapter.data.addAll(data.getStringArrayListExtra(ImageChooseConstant.RESULT_DATA_IMG));
             adapter.notifyDataSetChanged();
+            LogUtil.d("TAG:"+data.getStringArrayListExtra(ImageChooseConstant.RESULT_DATA_IMG).get(0).toString());
         }
     }
 }

@@ -18,4 +18,9 @@
         android:numColumns="3"
         android:id="@+id/mGrid">
     </GridView>
+    <com.liujc.largerimagescaleview.LargerImageScaleView
+        android:id="@+id/imageView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

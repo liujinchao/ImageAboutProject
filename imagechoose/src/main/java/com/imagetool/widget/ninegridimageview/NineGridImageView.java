@@ -285,7 +285,6 @@ public class NineGridImageView<T> extends ViewGroup {
                 mImageViewList.add(imageView);
                 return imageView;
             } else {
-                Log.e("LQRNineGridImageView", "你必须为LQRNineGridImageView设置LQRNineGridImageViewAdapter");
                 return null;
             }
         }

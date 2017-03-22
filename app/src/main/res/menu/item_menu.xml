@@ -14,4 +14,6 @@
         android:id="@+id/mNine"/>
     <item android:title="九宫格头像"
         android:id="@+id/mNineGridImageView"/>
+    <item android:title="加载默认大图"
+        android:id="@+id/larger_image_view"/>
 </menu>
