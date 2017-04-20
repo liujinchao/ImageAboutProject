@@ -2,10 +2,12 @@ package com.imagetool.imagechoose;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -192,8 +194,20 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
             }
         }
         File file = new File(tackPicStr);
-        Uri imageUri = Uri.fromFile(file);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        //獲取系統版本
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        // 激活相机
+        if (currentapiVersion < Build.VERSION_CODES.N) {
+            // 从文件中创建uri
+            Uri uri = Uri.fromFile(file);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        } else {
+            //兼容android7.0 使用共享文件的形式
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+            Uri uri = this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
         startActivityForResult(intent,REQ_TAKE_PIC_FROM_DEFAULT);
     }
 
