@@ -9,11 +9,10 @@ import android.view.View;
 import android.widget.GridView;
 
 import com.imagetool.imagechoose.ImageChooseConstant;
-import com.imagetool.imagechoose.crop.CropPath;
 import com.imagetool.utils.LogUtil;
+import com.imagetool.utils.PermissionUtil;
 import com.liujc.largerimagescaleview.ImageSource;
 import com.liujc.largerimagescaleview.LargerImageScaleView;
-import com.liujc.largerimagescaleview.activity.BasicFeaturesActivity;
 import com.liujc.largerimagescaleview.activity.viewpager.ViewPagerActivity;
 
 
@@ -23,14 +22,18 @@ public class MainActivity extends AppCompatActivity {
     private ShowAdapter adapter;
     private boolean flag;       //多选flag
     LargerImageScaleView imageView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGrid= (GridView) findViewById(R.id.mGrid);
-        mGrid.setAdapter(adapter=new ShowAdapter());
+        PermissionUtil.doCheckPermission(this);
+        initView();
         initData();
+    }
+
+    private void initView() {
+        mGrid = (GridView) findViewById(R.id.mGrid);
+        mGrid.setAdapter(adapter = new ShowAdapter());
     }
 
     private void initData() {

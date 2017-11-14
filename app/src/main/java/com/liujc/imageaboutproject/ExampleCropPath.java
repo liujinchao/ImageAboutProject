@@ -59,9 +59,6 @@ public class ExampleCropPath extends ACropCoverDrawable {
             canvas.drawPath(cropPath,paint);
             paint.setXfermode(null);
             canvas.restoreToCount(layerId);
-            //裁剪的方式会有锯齿，没找到方法去掉锯齿
-            //canvas.clipPath(opPath, Region.Op.DIFFERENCE);
-            //canvas.drawRect(0,0,cWidth,cHeight,paint);
         }
     }
 

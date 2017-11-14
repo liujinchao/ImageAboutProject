@@ -200,6 +200,7 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
         if (currentapiVersion < Build.VERSION_CODES.N) {
             // 从文件中创建uri
             Uri uri = Uri.fromFile(file);
+            LogUtil.d("uri:"+uri.toString());
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         } else {
             //兼容android7.0 使用共享文件的形式
