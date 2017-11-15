@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="返回"
+            android:textSize="16sp"
             android:gravity="center_vertical"
             android:layout_alignParentLeft="true"/>
         <TextView
@@ -22,6 +23,9 @@
             android:layout_height="match_parent"
             android:text="拍照界面"
             android:gravity="center"
+            android:textSize="18sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/take_photo_back"
             android:layout_toLeftOf="@+id/camera_change"/>
         <TextView
@@ -29,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="切换"
+            android:textSize="16sp"
             android:gravity="center_vertical"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
@@ -45,7 +50,7 @@
             android:id="@+id/rectOnCamera"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             />
 
         <ImageView
@@ -56,7 +61,7 @@
             android:src="@drawable/image_choose_camera"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"
+            android:padding="10dp"
             />
     </RelativeLayout>
 </LinearLayout>

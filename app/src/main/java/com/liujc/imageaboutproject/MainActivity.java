@@ -51,11 +51,25 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         flag=false;
         Intent intent=new Intent(ImageChooseConstant.ACTION_ALBUM);
-//        intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_CUSTOM);
         switch (item.getItemId()){
+            case R.id.mOneEdit:
+                intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,1);
+                intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_SYSTEM);
+                intent.putExtra(ImageChooseConstant.SHOW_IMG_EDIT,true);
+                startActivityForResult(intent,1);
+                break;
+            case R.id.mOneNoEdit:
+                intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,1);
+                intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_CUSTOM);
+                intent.putExtra(ImageChooseConstant.SHOW_IMG_EDIT,false);
+                intent.putExtra(ImageChooseConstant.SHOW_IMG_RECT,false);
+                startActivityForResult(intent,1);
+                break;
             case R.id.mOne:
                 intent.putExtra(ImageChooseConstant.INTENT_MAX_IMG,1);
                 intent.putExtra(ImageChooseConstant.INTENT_TAKE_PHOTO_TYPE,ImageChooseConstant.TP_CUSTOM);
+                intent.putExtra(ImageChooseConstant.SHOW_IMG_EDIT,true);
+                intent.putExtra(ImageChooseConstant.SHOW_IMG_RECT,true);
                 startActivityForResult(intent,1);
                 break;
             case R.id.mNine:

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="button_w">30dp</dimen>
+    <dimen name="button_size">30dp</dimen>
+    <dimen name="button_size_small">26dp</dimen>
+    <dimen name="padding">2dp</dimen>
+    <dimen name="pop_width_margin">2dp</dimen>
+    <dimen name="width1">2dp</dimen>
+    <dimen name="width2">4dp</dimen>
+    <dimen name="width3">6dp</dimen>
+    <dimen name="width4">8dp</dimen>
+    <dimen name="width5">10dp</dimen>
+</resources>

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.imagetool.imagechoose.ImageChooseConstant;
 import com.imagetool.imagechoose.R;
 
 /**
@@ -32,11 +33,15 @@ public class CameraActivity extends Activity implements View.OnClickListener,Rec
     private void initView() {
         mCameraSurfaceView = (CameraSurfaceView) findViewById(R.id.cameraSurfaceView);
         mCameraSurfaceView.setITakePhotoComplete(this);
+        mCameraSurfaceView.setImageName(getIntent().getStringExtra(IMAGE_PATH));
+
         mRectOnCamera = (RectOnCamera) findViewById(R.id.rectOnCamera);
+        mRectOnCamera.setIAutoFocus(this);
+        mRectOnCamera.setShowRect(getIntent().getExtras().getBoolean(ImageChooseConstant.SHOW_IMG_RECT,false));
+
         takePicBtn= (ImageView) findViewById(R.id.camera_take_photo);
         take_photo_back= (TextView) findViewById(R.id.take_photo_back);
         camera_change= (TextView) findViewById(R.id.camera_change);
-        mRectOnCamera.setIAutoFocus(this);
         takePicBtn.setOnClickListener(this);
         take_photo_back.setOnClickListener(this);
         camera_change.setOnClickListener(this);

@@ -3,9 +3,9 @@ package com.imagetool.imagechoose.camera;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,9 +15,6 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.imagetool.utils.ImageChooseUtil;
-import com.imagetool.utils.LogUtil;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,15 +22,11 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.imagetool.utils.ImageChooseUtil.rotateBitmapByDegree;
-
 /**
  * 类名称：CameraSurfaceView
  * 创建者：Create by liujc
- * 创建时间：Create on 2017/1/22 09:37
+ * 创建时间：Create on 2017/11/14
  * 描述：TODO
- * 最近修改时间：2017/1/22 09:37
- * 修改人：Modify by liujc
  */
 public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
 
@@ -42,10 +35,10 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
     private Context mContext;
     private SurfaceHolder holder;
     private Camera mCamera;
+    private String imageName = "";
 
     private int cameraPosition = 1;//0代表前置摄像头,1代表后置摄像头,默认打开前置摄像头
     private int cameraCount = 0;//获得相机的摄像头数量
-
 
     public CameraSurfaceView(Context context) {
         this(context, null);
@@ -61,12 +54,15 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
         initView();
     }
 
-
     private void initView() {
         cameraCount = Camera.getNumberOfCameras();//得到摄像头的个数
         holder = getHolder();//获得surfaceHolder引用
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);//设置类型
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     @Override
@@ -78,7 +74,6 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
             try {
                 mCamera.setPreviewDisplay(holder);//摄像头画面显示在Surface上
             } catch (IOException e) {
-                LogUtil.d(e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
@@ -89,7 +84,6 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.i(TAG, "surfaceChanged");
         //设置参数并开始预览
-//        setCameraParams(mCamera, mScreenWidth, mScreenHeight);
         setCameraParams(mCamera);
         mCamera.startPreview();
     }
@@ -136,7 +130,8 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
             BufferedOutputStream bos = null;
             Bitmap bm = null;
             if (data != null && data.length != 0) {
-                File baseFile = new File(ImageChooseUtil.getPicturePath());
+                File file = new File(imageName);
+                File baseFile = new File(file.getParent());
                 if (!baseFile.exists()){
                     baseFile.mkdirs();
                 }
@@ -151,17 +146,14 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
                             bm = rotateBitmapByDegree(bm,getPreviewDegree(mContext));
                             break;
                     }
-                    Log.i(TAG, "Environment.getExternalStorageDirectory()="+Environment.getExternalStorageDirectory());
-                    String filePath = ImageChooseUtil.getPicturePath()+System.currentTimeMillis()+".jpg";//照片保存路径
-                    File file = new File(filePath);
+
                     if (!file.exists()){
                         file.createNewFile();
                     }
-//                    setPictureDegreeZero(filePath);
                     bos = new BufferedOutputStream(new FileOutputStream(file));
                     bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩到流中
                     if (takePhotoComplete != null){
-                        takePhotoComplete.takePhotoComplete(filePath);
+                        takePhotoComplete.takePhotoComplete(imageName);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -192,10 +184,9 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
         //设置参数,并拍照
         setCameraParams(mCamera);
         // 当调用camera.takePiture方法后，camera关闭了预览，这时需要调用startPreview()来重新开启预览
-        mCamera.takePicture(null, null, jpeg);
+        mCamera.takePicture(shutter, raw, jpeg);
     }
 
-//    private void setCameraParams(Camera camera, int width, int height) {
     private void setCameraParams(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
         /**
@@ -283,7 +274,7 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
          * 修改SerfaceView的宽高，此时再将预览画面映射到SerfaceView,就不会出现屏幕拉伸的问题了
          * 外层容器是FrameLayout 则用android.widget.FrameLayout.LayoutParams
          * */
-        android.widget.RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(w, h);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(w, h);
         this.setLayoutParams(layoutParams);
         /**
          * 设置照片大小尺寸 首先获取所有支持的尺寸大小,for循环获取最大的尺寸大小
@@ -301,42 +292,8 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
 
         camera.cancelAutoFocus();//自动对焦。
         mCamera.setDisplayOrientation(90);// 设置PreviewDisplay的方向，效果就是将捕获的画面旋转多少度显示
-//        /**
-//         * 根据屏幕设置旋转角度
-//         * */
-//        camera.setDisplayOrientation(getPreviewDegree(mContext));
         camera.setParameters(parameters);
 
-    }
-
-    /**
-     * 从列表中选取合适的分辨率
-     * 默认w:h = 4:3
-     * <p>注意：这里的w对应屏幕的height
-     *            h对应屏幕的width<p/>
-     */
-    private Camera.Size getProperSize(List<Camera.Size> pictureSizeList, float screenRatio) {
-        Log.i(TAG, "screenRatio=" + screenRatio);
-        Camera.Size result = null;
-        for (Camera.Size size : pictureSizeList) {
-            float currentRatio = ((float) size.width) / size.height;
-            if (currentRatio - screenRatio == 0) {
-                result = size;
-                break;
-            }
-        }
-
-        if (null == result) {
-            for (Camera.Size size : pictureSizeList) {
-                float curRatio = ((float) size.width) / size.height;
-                if (curRatio == 4f / 3) {// 默认w:h = 4:3
-                    result = size;
-                    break;
-                }
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -360,7 +317,6 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//                    setCameraParams(mCamera,mScreenWidth,mScreenHeight);
                     setCameraParams(mCamera);
                     mCamera.startPreview();//开始预览
                     cameraPosition = 0;
@@ -379,7 +335,6 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//                    setCameraParams(mCamera,mScreenWidth,mScreenHeight);
                     setCameraParams(mCamera);
                     mCamera.startPreview();//开始预览
                     cameraPosition = 1;
@@ -435,7 +390,6 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
     private int getPreviewDegree(Context context) {
         WindowManager WM = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int rotation = WM.getDefaultDisplay().getRotation();
-//        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         int degree = 0;
         switch (rotation) {
             case Surface.ROTATION_0:
@@ -451,7 +405,6 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
                 degree = 180;
                 break;
         }
-        LogUtil.d("degree:"+degree);
         return degree;
     }
     private ITakePhotoComplete takePhotoComplete;
@@ -463,6 +416,36 @@ public class CameraSurfaceView  extends SurfaceView implements SurfaceHolder.Cal
 
     public void setITakePhotoComplete(ITakePhotoComplete takePhotoComplete) {
         this.takePhotoComplete = takePhotoComplete;
+    }
+
+    /**
+     * 将图片按照某个角度进行旋转
+     *
+     * @param bm
+     *            需要旋转的图片
+     * @param degree
+     *            旋转角度
+     * @return 旋转后的图片
+     */
+    private Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
+        Bitmap returnBm = null;
+
+        // 根据旋转角度，生成旋转矩阵
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        try {
+            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+            returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(),
+                    bm.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+        }
+        if (returnBm == null) {
+            returnBm = bm;
+        }
+        if (bm != returnBm) {
+            bm.recycle();
+        }
+        return returnBm;
     }
 
 }

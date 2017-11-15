@@ -21,6 +21,8 @@ public class ImageChooseConstant {
     public static final String INTENT_CROP_PARAM = "image_crop_param";
     public static final String INTENT_EXIST_DATA = "image_exist_data";
     public static final String  INTENT_TAKE_PHOTO_TYPE = "take_photo_type";
+    public static final String SHOW_IMG_EDIT = "show_img_edit"; //图片编辑功能
+    public static final String SHOW_IMG_RECT = "show_img_rect"; //拍照时显示选中框
 
 
     public static final String RESULT_DATA_IMG = "select_img_path";
@@ -70,8 +72,6 @@ public class ImageChooseConstant {
     public static int newestAlbumSize = 100;
 
     public static int albumPopupHeight = 600;
-
-    public static String tantoToast = "";
 
     /**照片选择指示器*/
     public static IChooseDrawable chooseDrawable = new CircleChooseDrawable(true,0xFF33a6b8);

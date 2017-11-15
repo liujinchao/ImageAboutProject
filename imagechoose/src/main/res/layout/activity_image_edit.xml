@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+
+    <ImageView
+        android:id="@+id/bg_iv_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.imagetool.imagechoose.edit.paint.PaintView
+        android:id="@+id/paint_view"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:background="#90000000">
+
+        <TextView
+            android:id="@+id/back_tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="15dp"
+            android:text="返回"
+            android:textColor="#FFFFFF"/>
+
+        <View
+            android:id="@+id/line3"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#EEEEEE"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="0dp"
+            android:layout_toRightOf="@+id/back_tv_id"
+            />
+        <TextView
+            android:id="@+id/tv_artifical_remarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="15dp"
+            android:text="人工标记"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentRight="true"/>
+
+        <RadioGroup
+            android:id="@+id/shape_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:checkedButton="@+id/point"
+            android:layout_toRightOf="@+id/line3"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/point"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@null"
+                android:button="@drawable/btn_radio_point_bg"
+                android:textColor="#FFFFFF"
+                android:text=""
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@drawable/btn_radio_circle_bg"
+                android:textColor="#FFFFFF"
+                android:text="" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/rect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@drawable/btn_radio_rectangle_bg"
+                android:textColor="#FFFFFF"
+                android:text="" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <RadioButton
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@drawable/btn_radio_text_bg"
+                android:textColor="#FFFFFF"
+                android:text="" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_radio_clear_bg"
+                android:scaleType="fitCenter"
+                android:textColor="#FFFFFF"
+                android:layout_gravity="center_vertical"
+                android:text="" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <!-- Hide -->
+            <RadioButton
+                android:id="@+id/line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@null"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:text="线" />
+
+            <Button
+                android:id="@+id/color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@null"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:text="颜色" />
+
+            <Button
+                android:id="@+id/width"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@null"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:text="粗细" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@drawable/btn_radio_clear_bg"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:text="撤销" />
+
+            <Button
+                android:id="@+id/capture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@null"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:text="截屏" />
+
+            <Button
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@null"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:text="分享" />
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:background="#90000000">
+
+        <TextView
+            android:id="@+id/retake_tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="15dp"
+            android:text="重拍"
+            android:textColor="#FFFFFF"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="0dp"
+            />
+
+        <TextView
+            android:id="@+id/ok_tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="15dp"
+            android:text="使用照片"
+            android:textColor="#FFFFFF"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>

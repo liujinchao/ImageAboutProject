@@ -16,10 +16,8 @@ import android.view.WindowManager;
 /**
  * 类名称：RectOnCamera
  * 创建者：Create by liujc
- * 创建时间：Create on 2017/1/22 09:43
- * 描述：TODO
- * 最近修改时间：2017/1/22 09:43
- * 修改人：Modify by liujc
+ * 创建时间：Create on 2017/11/14
+ * 描述：放在图片上的选中框
  */
 public class RectOnCamera extends View {
     private static final String TAG = "CameraSurfaceView";
@@ -30,6 +28,9 @@ public class RectOnCamera extends View {
     // 圆
     private Point centerPoint;
     private int radio;
+    private float density;
+    private boolean showFouceCircle = false;
+    private boolean showRect = true;
 
     public RectOnCamera(Context context) {
         this(context, null);
@@ -53,30 +54,43 @@ public class RectOnCamera extends View {
         mScreenHeight = outMetrics.heightPixels;
     }
 
+    public void setShowRect(boolean showRect) {
+        this.showRect = showRect;
+    }
+
     private void initView(Context context) {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);// 抗锯齿
         mPaint.setDither(true);// 防抖动
         mPaint.setColor(Color.RED);
         mPaint.setStrokeWidth(5);
-        mPaint.setStyle(Paint.Style.STROKE);// 空心
-        int marginLeft = (int) (mScreenWidth*0.15);
-        int marginTop = (int) (mScreenHeight * 0.25);
-        mRectF = new RectF(marginLeft, marginTop, mScreenWidth - marginLeft, mScreenHeight - marginTop);
+        mPaint.setStyle(Paint.Style.STROKE);
 
-        centerPoint = new Point(mScreenWidth/2, mScreenHeight/2);
-        radio = (int) (mScreenWidth*0.1);
+        density = context.getResources().getDisplayMetrics().density;
+        int width = (int) (mScreenWidth*0.6);
+        int heigh = width;
+        int marginLeft = (mScreenWidth - width) / 2;
+        int marginTop = (mScreenHeight - heigh) / 2;
+        mRectF = new RectF(marginLeft, marginTop - 20*density, mScreenWidth - marginLeft, mScreenHeight - marginTop - 20*density);
+
+        centerPoint = new Point(mScreenWidth/2, (int) (mScreenHeight/2 - 20*density));
+        radio = (int) (mScreenWidth*0.07);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPaint.setColor(Color.RED);
-        canvas.drawRect(mRectF, mPaint);
-        mPaint.setColor(Color.WHITE);
+        if (showRect){
+            mPaint.setColor(Color.RED);
+            canvas.drawRect(mRectF, mPaint);
+        }
+
         Log.i(TAG, "onDraw");
-        canvas.drawCircle(centerPoint.x,centerPoint.y, radio,mPaint);// 外圆
-        canvas.drawCircle(centerPoint.x,centerPoint.y, radio - 20,mPaint); // 内圆
+        if (showFouceCircle){
+            mPaint.setColor(Color.WHITE);
+            canvas.drawCircle(centerPoint.x,centerPoint.y, radio,mPaint);// 外圆
+            canvas.drawCircle(centerPoint.x,centerPoint.y, radio - 20,mPaint); // 内圆
+        }
     }
 
     @Override

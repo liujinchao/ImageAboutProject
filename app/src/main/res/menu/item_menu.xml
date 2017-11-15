@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="选择一张图片"
+    <item android:title="选择一张图片(系统相机可编辑)"
+        android:id="@+id/mOneEdit"/>
+    <item android:title="选择一张图片(自定义相机不可编辑)"
+        android:id="@+id/mOneNoEdit"/>
+    <item android:title="选择一张图片(自定义相机可编辑)"
         android:id="@+id/mOne"/>
     <item android:title="默认裁图"
         android:id="@+id/mCustomCrop" />

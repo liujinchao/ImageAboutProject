@@ -24,12 +24,16 @@ import com.imagetool.imagechoose.albumBean.ImageFolder;
 import com.imagetool.imagechoose.albumBean.ImageInfo;
 import com.imagetool.imagechoose.callBack.IPhotoCamera;
 import com.imagetool.imagechoose.camera.CameraActivity;
+import com.imagetool.imagechoose.edit.ImageEditActivity;
 import com.imagetool.utils.ImageChooseUtil;
 import com.imagetool.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.imagetool.imagechoose.ImageChooseConstant.SHOW_IMG_EDIT;
+import static com.imagetool.imagechoose.edit.ImageEditActivity.PATH;
 
 /**
  * 类名称：ChoosePictureEntryActivity
@@ -43,15 +47,24 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
     private Toolbar toolbar;
     private MenuItem mSure;
 
-    private String tackPicStr;
     private static final int REQ_TAKE_PIC_FROM_DEFAULT= 0x15; // 从默认系统相机拍摄
     private static final int REQ_TAKE_PIC_FROM_CUSTOM = 0x16; // 从自定义相机拍摄
+    private final static int ACTIVITY_CODE_EDIT_PHOTO = 0x17; // 编辑图片
+
+    private boolean showImgEdit = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_chooser_activity_entry);
         setTitle();
+        initView();
+    }
+
+    private void initView() {
+        if (getIntent() != null && getIntent().getExtras() != null){
+            showImgEdit = getIntent().getExtras().getBoolean(SHOW_IMG_EDIT,false);
+        }
         Rect outRect = new Rect();
         getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         ImageChooseConstant.albumPopupHeight = (int) (outRect.height()*0.6f);
@@ -130,22 +143,43 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.d("result-"+resultCode+"/"+requestCode);
         entry.onActivityResult(requestCode, resultCode, data);
         if(resultCode== Activity.RESULT_OK){
-            if(requestCode == REQ_TAKE_PIC_FROM_DEFAULT){
-                setResultBackToSource(tackPicStr);
-            }else if (requestCode == REQ_TAKE_PIC_FROM_CUSTOM){
-                String imgPath = data.getStringExtra(CameraActivity.IMAGE_PATH);
-                setResultBackToSource(imgPath);
+            if(requestCode == REQ_TAKE_PIC_FROM_DEFAULT){ //调用系统相机拍照的回调
+                if (showImgEdit){
+                    jumpToImgEdit();
+                }else {
+                    setResultBackToSource(fileName);
+                }
+            }else if (requestCode == REQ_TAKE_PIC_FROM_CUSTOM){//调用自定义相机拍照的回调
+                if (showImgEdit){
+                    jumpToImgEdit();
+                }else {
+                    setResultBackToSource(fileName);
+                }
+            }else if (requestCode == ACTIVITY_CODE_EDIT_PHOTO){//调用图片编辑后的回调
+                setResultBackToSource(fileName);
+            }
+        }else if (resultCode == -2) { // 重新拍照
+            Intent intent = new Intent(ChoosePictureEntryActivity.this,CameraActivity.class);
+            intent.putExtra(CameraActivity.IMAGE_PATH,fileName);
+            if (ImageChooseConstant.takePhotoType == ImageChooseConstant.TP_SYSTEM){
+                startActivityForResult(intent,REQ_TAKE_PIC_FROM_DEFAULT);
+            }else {
+                startActivityForResult(intent,REQ_TAKE_PIC_FROM_CUSTOM);
             }
         }
     }
 
+    private void jumpToImgEdit(){
+        Intent intent = new Intent(ChoosePictureEntryActivity.this, ImageEditActivity.class);
+        intent.putExtra(PATH, fileName);
+        startActivityForResult(intent,ACTIVITY_CODE_EDIT_PHOTO);
+    }
     private void setResultBackToSource(String imgPath) {
         //让拍摄的图片可以在相册目录中出现
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(imgPath))));
@@ -169,6 +203,7 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
 
     @Override
     public void takePhoto() {
+        fileName = ImageChooseUtil.getPicturePath() + System.currentTimeMillis() + ".jpg";
         if(ImageChooseConstant.takePhotoType == ImageChooseConstant.TP_SYSTEM){
             doSystemDefaultCamera();
         }else {
@@ -176,16 +211,21 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
             doCustomCamera();
         }
     }
-
+    String fileName = "";
     private void doCustomCamera(){
+        File mFile = new File(fileName);
+        if (!mFile.getParentFile().exists())
+            mFile.getParentFile().mkdirs();
         Intent intent = new Intent(ChoosePictureEntryActivity.this,CameraActivity.class);
-//        Intent intent = new Intent(ChoosePictureEntryActivity.this,CameraActivity.class);
+        intent.putExtra(CameraActivity.IMAGE_PATH,fileName);
+        intent.putExtra(ImageChooseConstant.SHOW_IMG_RECT,
+                getIntent().getExtras().getBoolean(ImageChooseConstant.SHOW_IMG_RECT,false));
         startActivityForResult(intent,REQ_TAKE_PIC_FROM_CUSTOM);
     }
     private void doSystemDefaultCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //TODO 传入保存路径直接保存
-        tackPicStr= ImageChooseUtil.getPicturePath()+ System.currentTimeMillis()+".jpg";
+        fileName = ImageChooseUtil.getPicturePath()+ System.currentTimeMillis()+".jpg";
         File folder = new File(ImageChooseUtil.getPicturePath());
         if(!folder.exists()){
             if(!folder.mkdirs()){
@@ -193,10 +233,9 @@ public class ChoosePictureEntryActivity extends FragmentActivity implements IPho
                 return;
             }
         }
-        File file = new File(tackPicStr);
-        //獲取系統版本
+        File file = new File(fileName);
+        //获取系统版本
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        // 激活相机
         if (currentapiVersion < Build.VERSION_CODES.N) {
             // 从文件中创建uri
             Uri uri = Uri.fromFile(file);
