@@ -12,6 +12,10 @@
 
 ![image](https://github.com/liujinchao/ImageAboutProject/blob/master/screenshot/图库选择.png)
 
-4. 群组头像
+4. 图片编辑
+
+![image](https://github.com/liujinchao/ImageAboutProject/blob/master/screenshot/图片编辑.png)
+
+5. 群组头像
 
 ![image](https://github.com/liujinchao/ImageAboutProject/blob/master/screenshot/群组头像.png)
